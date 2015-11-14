@@ -350,6 +350,7 @@ bool AudioControlTest::init()
     _audioID = AudioEngine::INVALID_AUDIO_ID;
     _loopEnabled = false;
     _volume = 1.0f;
+    _pitch = 1.0f;
     _duration = AudioEngine::TIME_UNKNOWN;
     _timeRatio = 0.0f;
     _updateTimeSlider = true;
@@ -441,6 +442,17 @@ bool AudioControlTest::init()
     volumeSlider->setPosition(Vec2(layerSize.width * 0.5f,layerSize.height * 0.35f));
     addChild(volumeSlider);
     
+    auto pitchSlider = SliderEx::create();
+    pitchSlider->setPercent(49);
+    pitchSlider->setCallBack([&](SliderEx* sender,float ratio,SliderEx::TouchEvent event){
+        _pitch = (ratio + 0.01) / 0.5;
+        if (_audioID != AudioEngine::INVALID_AUDIO_ID ) {
+            AudioEngine::setPitch(_audioID, _pitch);
+        }
+    });
+    pitchSlider->setPosition(Vec2(layerSize.width * 0.5f,layerSize.height * 0.15f));
+    addChild(pitchSlider);
+
     auto timeSlider = SliderEx::create();
     timeSlider->setCallBack([&](SliderEx* sender,float ratio,SliderEx::TouchEvent event){
         switch(event){

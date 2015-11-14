@@ -71,6 +71,7 @@ private:
     int _audioID;
     bool _loopEnabled;
     float _volume;
+    float _pitch;
     float _duration;
     float _timeRatio;
     
