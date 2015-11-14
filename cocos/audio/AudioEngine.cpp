@@ -137,6 +137,7 @@ int AudioEngine::play2d(const std::string& filePath, bool loop, float volume, co
             
             auto& audioRef = _audioIDInfoMap[ret];
             audioRef.volume = volume;
+            audioRef.pitch = 1.0f;
             audioRef.loop = loop;
             audioRef.is3dAudio = false;
             audioRef.filePath = &it->first;
@@ -175,6 +176,21 @@ void AudioEngine::setVolume(int audioID, float volume)
         if (it->second.volume != volume){
             _audioEngineImpl->setVolume(audioID, volume);
             it->second.volume = volume;
+        }
+    }
+}
+
+void AudioEngine::setPitch(int audioID, float pitch)
+{
+    auto it = _audioIDInfoMap.find(audioID);
+    if (it != _audioIDInfoMap.end()){
+        if (pitch <= 0.0f) {
+            pitch = 1.0f;
+        }
+
+        if (it->second.pitch != pitch){
+            _audioEngineImpl->setPitch(audioID, pitch);
+            it->second.pitch = pitch;
         }
     }
 }
@@ -368,6 +384,18 @@ float AudioEngine::getVolume(int audioID)
     }
 
     log("AudioEngine::getVolume-->The audio instance %d is non-existent", audioID);
+    return 0.0f;
+}
+
+float AudioEngine::getPitch(int audioID)
+{
+    auto tmpIterator = _audioIDInfoMap.find(audioID);
+    if (tmpIterator != _audioIDInfoMap.end())
+    {
+        return tmpIterator->second.pitch;
+    }
+
+    log("AudioEngine::getPitch-->The audio instance %d is non-existent", audioID);
     return 0.0f;
 }
 

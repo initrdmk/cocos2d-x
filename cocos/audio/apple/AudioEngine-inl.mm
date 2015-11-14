@@ -279,6 +279,7 @@ int AudioEngineImpl::play2d(const std::string &filePath ,bool loop ,float volume
     player->_alSource = alSource;
     player->_loop = loop;
     player->_volume = volume;
+    player->_pitch = 1.0f;
     audioCache->addCallbacks(std::bind(&AudioEngineImpl::_play2d,this,audioCache,_currentAudioID));
     
     _alSourceUsed[alSource] = true;
@@ -324,6 +325,21 @@ void AudioEngineImpl::setVolume(int audioID,float volume)
     if (player._ready) {
         alSourcef(_audioPlayers[audioID]._alSource, AL_GAIN, volume);
         
+        auto error = alGetError();
+        if (error != AL_NO_ERROR) {
+            printf("%s: audio id = %d, error = %x\n", __PRETTY_FUNCTION__,audioID,error);
+        }
+    }
+}
+
+void AudioEngineImpl::setPitch(int audioID, float pitch)
+{
+    auto& player = _audioPlayers[audioID];
+    player._pitch = pitch;
+
+    if (player._ready) {
+        alSourcef(_audioPlayers[audioID]._alSource, AL_PITCH, pitch);
+
         auto error = alGetError();
         if (error != AL_NO_ERROR) {
             printf("%s: audio id = %d, error = %x\n", __PRETTY_FUNCTION__,audioID,error);
