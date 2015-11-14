@@ -80,6 +80,7 @@ AudioPlayer::~AudioPlayer()
         _fdPlayerPlay = nullptr;
         _fdPlayerVolume = nullptr;
         _fdPlayerSeek = nullptr;
+        _fdPlayerPitch = nullptr;
     }
     if(_assetFd > 0)
     {
@@ -159,6 +160,10 @@ bool AudioPlayer::init(SLEngineItf engineEngine, SLObjectItf outputMixObject,con
         // get the volume interface
         result = (*_fdPlayerObject)->GetInterface(_fdPlayerObject, SL_IID_VOLUME, &_fdPlayerVolume);
         if(SL_RESULT_SUCCESS != result){ ERRORLOG("get the volume interface fail"); break; }
+
+        // get the pitch interface
+        result = (*_fdPlayerObject)->GetInterface(_fdPlayerObject, SL_IID_PITCH, &_fdPlayerPitch);
+        if(SL_RESULT_SUCCESS != result){ ERRORLOG("get the pitch interface fail"); _fdPlayerPitch = nullptr; }
 
         _loop = loop;
         if (loop){
@@ -306,6 +311,19 @@ void AudioEngineImpl::setVolume(int audioID,float volume)
         dbVolume = SL_MILLIBEL_MIN;
     }
     auto result = (*player._fdPlayerVolume)->SetVolumeLevel(player._fdPlayerVolume, dbVolume);
+    if(SL_RESULT_SUCCESS != result){
+        log("%s error:%u",__func__, result);
+    }
+}
+
+void AudioEngineImpl::setPitch(int audioID, float pitch)
+{
+    auto& player = _audioPlayers[audioID];
+    if (nullptr == player._fdPlayerPitch) {
+        log("%s error: function not support", __func__);
+        return;
+    }
+    auto result = (*player._fdPlayerPitch)->SetPitch(player._fdPlayerPitch, pitch);
     if(SL_RESULT_SUCCESS != result){
         log("%s error:%u",__func__, result);
     }
