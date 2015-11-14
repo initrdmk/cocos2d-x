@@ -439,7 +439,7 @@ bool AudioControlTest::init()
             AudioEngine::setVolume(_audioID, _volume);
         }
     });
-    volumeSlider->setPosition(Vec2(layerSize.width * 0.5f,layerSize.height * 0.35f));
+    volumeSlider->setPosition(Vec2(layerSize.width * 0.5f,layerSize.height * 0.4f));
     addChild(volumeSlider);
     
     auto pitchSlider = SliderEx::create();
@@ -450,7 +450,7 @@ bool AudioControlTest::init()
             AudioEngine::setPitch(_audioID, _pitch);
         }
     });
-    pitchSlider->setPosition(Vec2(layerSize.width * 0.5f,layerSize.height * 0.15f));
+    pitchSlider->setPosition(Vec2(layerSize.width * 0.5f,layerSize.height * 0.3f));
     addChild(pitchSlider);
 
     auto timeSlider = SliderEx::create();
@@ -469,7 +469,7 @@ bool AudioControlTest::init()
                 break;
         }
     });
-    timeSlider->setPosition(Vec2(layerSize.width * 0.5f,layerSize.height * 0.25f));
+    timeSlider->setPosition(Vec2(layerSize.width * 0.5f,layerSize.height * 0.2f));
     addChild(timeSlider);
     _timeSlider = timeSlider;
     
@@ -479,6 +479,12 @@ bool AudioControlTest::init()
     volumeLabel->setAnchorPoint(Vec2::ANCHOR_MIDDLE_RIGHT);
     volumeLabel->setPosition(volumeSliderPos.x - sliderSize.width / 2, volumeSliderPos.y);
     addChild(volumeLabel);
+
+    auto& pitchSliderPos = pitchSlider->getPosition();
+    auto pitchLabel = Label::createWithTTF("pitch:  ", fontFilePath, 20);
+    pitchLabel->setAnchorPoint(Vec2::ANCHOR_MIDDLE_RIGHT);
+    pitchLabel->setPosition(pitchSliderPos.x - sliderSize.width / 2, pitchSliderPos.y);
+    addChild(pitchLabel);
     
     auto& timeSliderPos = timeSlider->getPosition();
     auto timeLabel = Label::createWithTTF("time:  ", fontFilePath, 20);
